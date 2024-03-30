@@ -4,7 +4,6 @@ import az.edu.bhos.l14todoapp.data.dto.TodoRemoteDto
 import retrofit2.http.GET
 
 interface TodoAPI {
-    // TODO fix the issue
-    @GET("todos2")
+    @GET("todos")
     suspend fun getTodos(): List<TodoRemoteDto>
 }

@@ -15,6 +15,7 @@ class MainViewModel(
 ) : ViewModel() {
 
     private val _todoBundles: MutableLiveData<List<TodoBundle>> = MutableLiveData()
+    private val _weekdays = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
     val todoBundles: LiveData<List<TodoBundle>>
         get() = _todoBundles
@@ -26,9 +27,16 @@ class MainViewModel(
 
         todoRepo.observeTodoEntries()
             .onEach { todos ->
-                // todo convert todos to bundles
+                val todoBundles = todos.groupBy { it.weekday }
+                val todoBundleList = todoBundles.map { (weekday, todos) ->
+                    TodoBundle(weekday, todos)
+                }
 
-                _todoBundles.postValue(emptyList())
+                val sortedTodoBundleList = todoBundleList.sortedBy {
+                    _weekdays.indexOf(it.weekday)
+                }
+
+                _todoBundles.postValue(sortedTodoBundleList)
             }.launchIn(viewModelScope)
     }
 }
